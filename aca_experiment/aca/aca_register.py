@@ -15,4 +15,4 @@ class AcaRegister(gvsoc.systree.Component):
         return gvsoc.systree.SlaveItf(self, 'input', signature='io')
     
     def i_SET(self) -> gvsoc.systree.SlaveItf:
-        return gvsoc.systree.SlaveItf(self, 'set', signature='wire<int>')
+        return gvsoc.systree.SlaveItf(self, 'set', signature='wire<int,int>')
