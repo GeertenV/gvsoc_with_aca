@@ -33,7 +33,7 @@ private:
     uint8_t col_cycles;
 
     std::queue<std::tuple<int, int, int>> queue;
-    uint32_t col_index = 0;
+    uint32_t vec_index = 0;
 };
 
 AcaModule::AcaModule(vp::ComponentConf &config)
@@ -127,9 +127,9 @@ void AcaModule::handle_event(vp::Block *__this, vp::ClockEvent *event)
     _this->queue.pop();
     _this->trace.msg(vp::TraceLevel::DEBUG, "reading a value from scratchpad: row_idx = %d, col_idx = %d\n", std::get<0>(read_req), std::get<1>(read_req));
     int value = std::get<0>(read_req)*_this->col_count + std::get<1>(read_req);
-    _this->set_itf.sync(std::make_tuple(_this->col_index,(uint32_t)value));
-    _this->col_index++;
-    if(std::get<2>(read_req)==_this->row_latency)_this->col_index = 0;
+    _this->set_itf.sync(std::make_tuple(_this->vec_index,(uint32_t)value));
+    _this->vec_index++;
+    if(std::get<2>(read_req)==_this->row_latency)_this->vec_index = 0;
     if(!_this->queue.empty()) _this->event.enqueue(std::get<2>(read_req));
 }
 

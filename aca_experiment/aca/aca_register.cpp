@@ -56,7 +56,7 @@ vp::IoReqStatus AcaRegister::handle_req(vp::Block *__this, vp::IoReq *req)
     {
 
         _this->trace.msg(vp::TraceLevel::DEBUG, "returning value: %d\n", _this->values[req->get_addr()/4]);
-        *(uint32_t *)req->get_data() = _this->values[req->get_addr()/4];
+        *(float *)req->get_data() = _this->values[req->get_addr()/4];
         req->inc_latency(_this->latency);
     }
     return vp::IO_REQ_OK;

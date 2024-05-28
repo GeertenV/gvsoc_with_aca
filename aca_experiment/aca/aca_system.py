@@ -29,22 +29,22 @@ class Soc(gvsoc.systree.Component):
         # Main interconnect
         ico = interco.router.Router(self, 'ico')
 
-        aca = aca_module.AcaModule(self, 'aca_module', row_latency=0x00000010, col_latency=0x00000001, row_count=22, col_count=22)
-        ico.add_mapping('aca_module', base=0x20000000, remove_offset=0x20000000, size=0x00001000)
+        aca = aca_module.AcaModule(self, 'aca_module', row_latency=16, col_latency=1, row_count=22, col_count=22)
+        ico.add_mapping('aca_module', base=0x2000000, remove_offset=0x2000000, size=0x00001000)
         self.bind(ico, 'aca_module', aca, 'input')
 
         aca_reg = aca_register.AcaRegister(self, 'aca_register', latency=0x00000001)
-        ico.add_mapping('aca_reg', base=0x30000000, remove_offset=0x30000000, size=0x00001000)
+        ico.add_mapping('aca_reg', base=0x3000000, remove_offset=0x3000000, size=0x00001000)
         self.bind(ico, 'aca_reg', aca_reg, 'input')
 
         self.bind(aca, 'set', aca_reg, 'set')
 
         # Main memory
-        mem = memory.memory.Memory(self, 'mem', size=0x00100000)
+        mem = memory.memory.Memory(self, 'mem', size=0x1000000)
         # The memory needs to be connected with a mpping. The rm_base is used to substract
         # the global address to the requests address so that the memory only gets a local offset.
         
-        ico.add_mapping('mem', base=0x00000000, remove_offset=0x00000000, size=0x00100000)
+        ico.add_mapping('mem', base=0x00000000, remove_offset=0x00000000, size=0x1000000)
         self.bind(ico, 'mem', mem, 'input')
 
         # Instantiates the main core and connect fetch and data to the interconnect
