@@ -15,7 +15,8 @@ private:
     vp::IoSlave input_itf;
     vp::Trace trace;
     uint32_t latency;
-    int values[7];
+    int vlen;
+    float* values;
 };
 
 AcaRegister::AcaRegister(vp::ComponentConf &config)
@@ -28,14 +29,9 @@ AcaRegister::AcaRegister(vp::ComponentConf &config)
     this->new_slave_port("set", &this->set_itf);
 
     this->latency = this->get_js_config()->get_child_int("latency");
+    this->vlen = this->get_js_config()->get_child_int("vlen");
     this->traces.new_trace("trace", &this->trace);
-    this->values[0] = 0;
-    this->values[1] = 0;
-    this->values[2] = 0;
-    this->values[3] = 0;
-    this->values[4] = 0;
-    this->values[5] = 0;
-    this->values[6] = 0;
+    this->values = new float[vlen];
 }
 
 void AcaRegister::handle_set(vp::Block *__this, std::tuple<int, int> set_input)
@@ -43,7 +39,7 @@ void AcaRegister::handle_set(vp::Block *__this, std::tuple<int, int> set_input)
     AcaRegister *_this = (AcaRegister *)__this;
 
     //_this->trace.msg(vp::TraceLevel::DEBUG, "Received index %d\n", std::get<0>(set_input));
-    //_this->trace.msg(vp::TraceLevel::DEBUG, "Received value %d\n", std::get<1>(set_input));
+    //_this->trace.msg(vp::TraceLevel::DEBUG, "Received value %f\n", std::get<1>(set_input));
 
     _this->values[std::get<0>(set_input)] = std::get<1>(set_input);
 }
@@ -55,7 +51,7 @@ vp::IoReqStatus AcaRegister::handle_req(vp::Block *__this, vp::IoReq *req)
     if (!req->get_is_write() && req->get_size() == 4)
     {
 
-        _this->trace.msg(vp::TraceLevel::DEBUG, "returning value: %d\n", _this->values[req->get_addr()/4]);
+        _this->trace.msg(vp::TraceLevel::DEBUG, "returning value: %f\n", _this->values[req->get_addr()/4]);
         *(float *)req->get_data() = _this->values[req->get_addr()/4];
         req->inc_latency(_this->latency);
     }

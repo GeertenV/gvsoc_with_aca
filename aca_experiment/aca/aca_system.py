@@ -33,7 +33,7 @@ class Soc(gvsoc.systree.Component):
         ico.add_mapping('aca_module', base=0x2000000, remove_offset=0x2000000, size=0x00001000)
         self.bind(ico, 'aca_module', aca, 'input')
 
-        aca_reg = aca_register.AcaRegister(self, 'aca_register', latency=0x00000001)
+        aca_reg = aca_register.AcaRegister(self, 'aca_register', latency=0x00000001, vlen=7)
         ico.add_mapping('aca_reg', base=0x3000000, remove_offset=0x3000000, size=0x00001000)
         self.bind(ico, 'aca_reg', aca_reg, 'input')
 
