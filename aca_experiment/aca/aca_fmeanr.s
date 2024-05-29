@@ -113,10 +113,10 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 	vfmv.f.s	 	fa5,v3					# move v3[0] to fa5
 	li				a3,WINDOWSIZE			# set diviser
 	fcvt.s.w		fa4,a3					# convert diviser to float
-	li				a3,12345
-	# fsw			fa5,(a3)			# store sum (just for debugging)
+	li				a3,MOD_ADDRESS
+	# fsw			fa5,28(a3)			# store sum (just for debugging)
 	fdiv.s			fa5,fa5,fa4				# division	
-	fsw				fa5,(a3)				# store
+	fsw				fa5,28(a3)				# store
 
 	addi			a1,a1,1					# increment x iterator
 	bne				a2,a1,.L2

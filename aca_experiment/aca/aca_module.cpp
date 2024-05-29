@@ -140,6 +140,11 @@ vp::IoReqStatus AcaModule::handle_req(vp::Block *__this, vp::IoReq *req)
                 _this->read_scratchpad();
             }
         }
+        if(req->get_addr() == 0x1c){
+            if(req->get_is_write()){
+                _this->trace.msg(vp::TraceLevel::INFO, "Write value = %0.2f\n", *(float *)req->get_data());
+            }
+        }
     }
     return vp::IO_REQ_OK;
 }
