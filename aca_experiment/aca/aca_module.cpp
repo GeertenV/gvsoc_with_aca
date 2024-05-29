@@ -124,10 +124,15 @@ vp::IoReqStatus AcaModule::handle_req(vp::Block *__this, vp::IoReq *req)
             if(req->get_is_write()){
                 _this->col_cycles = *req->get_data();
                 _this->trace.msg(vp::TraceLevel::DEBUG, "Col Cycles = %d\n", _this->col_cycles);
-                _this->read_scratchpad();
             }
             else{
                 *(uint32_t *)req->get_data() = _this->col_cycles;
+            }
+        }
+        if(req->get_addr() == 0x18){
+            if(req->get_is_write()){
+                _this->trace.msg(vp::TraceLevel::DEBUG, "ACA operation is started.\n");
+                _this->read_scratchpad();
             }
         }
     }

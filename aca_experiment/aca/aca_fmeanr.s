@@ -22,6 +22,7 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 
 # initialize some constants # 
 	li				a2,IMGWIDTH-DIAMETER+1				# x and y iterator img loop bounds
+	#li				a2,1
 	li  			a4,MOD_ADDRESS
 	li  			a5,REG_ADDRESS
 
@@ -45,6 +46,7 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 	sw 				a3,16(a4)				# set Col Stride
 	li 				a3,DIAMETER				# Col Cycles = DIAMETER
 	sw 				a3,20(a4)				# set Col Cycles
+	sw 				a3,24(a4)				# set Col Cycles
 
 	li				a3,1					# iterator for window
 	li				a6,DIAMETER				# number of rows in the window
@@ -54,16 +56,19 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 	NOP
 	NOP
 	NOP
+
 	NOP
 	NOP
 	NOP
 	NOP
 	NOP
+
 	NOP
 	NOP
 	NOP
 	NOP
 	NOP
+
 	NOP
 	NOP
 	NOP
@@ -84,17 +89,21 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 	NOP
 	NOP
 	NOP
+
 	NOP
 	NOP
 	NOP
 	NOP
 	NOP
+
 	NOP
 	NOP
 	NOP
 	NOP
 	NOP
+
 	NOP
+
 	vle32.v 		v2,(a5)					# load next vector
 	vfadd.vv		v1,v2,v1				# add vectors
 	addi			a3,a3,1					# increment window iterator
