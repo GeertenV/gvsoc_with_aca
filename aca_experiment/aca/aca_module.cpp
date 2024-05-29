@@ -13,6 +13,7 @@ private:
     static vp::IoReqStatus handle_req(vp::Block *__this, vp::IoReq *req);
     static void handle_event(vp::Block *__this, vp::ClockEvent *event);
     void read_scratchpad();
+    void initialize_array_data();
 
     vp::IoSlave input_itf;
     vp::ClockEvent event;
@@ -34,6 +35,8 @@ private:
 
     std::queue<std::tuple<int, int, int>> queue;
     uint32_t vec_index = 0;
+
+    float** array_data;
 };
 
 AcaModule::AcaModule(vp::ComponentConf &config)
@@ -50,6 +53,18 @@ AcaModule::AcaModule(vp::ComponentConf &config)
     this->traces.new_trace("trace", &this->trace);
 
     this->new_master_port("set", &this->set_itf);
+
+    this->initialize_array_data();
+}
+
+void AcaModule::initialize_array_data(){
+    this->array_data = new float* [this->row_count];
+    for (int i = 0; i < this->row_count; i++) {
+        this->array_data[i] = new float[this->col_count];
+        for (int j = 0; j < this->col_count; j++) {
+            array_data[i][j] = (float)(i*this->col_count + j);
+        }
+    }
 }
 
 vp::IoReqStatus AcaModule::handle_req(vp::Block *__this, vp::IoReq *req)
@@ -125,9 +140,10 @@ void AcaModule::handle_event(vp::Block *__this, vp::ClockEvent *event)
     std::tuple<int, int, int> read_req;
     read_req = _this->queue.front();
     _this->queue.pop();
-    _this->trace.msg(vp::TraceLevel::DEBUG, "reading a value from scratchpad: row_idx = %d, col_idx = %d\n", std::get<0>(read_req), std::get<1>(read_req));
-    int value = std::get<0>(read_req)*_this->col_count + std::get<1>(read_req);
-    _this->set_itf.sync(std::make_tuple(_this->vec_index,(uint32_t)value));
+    int row_idx = std::get<0>(read_req);
+    int col_idx = std::get<1>(read_req);
+    _this->trace.msg(vp::TraceLevel::DEBUG, "reading a value from scratchpad: row_idx = %d, col_idx = %d\n",row_idx, col_idx);
+    _this->set_itf.sync(std::make_tuple(_this->vec_index,_this->array_data[row_idx][col_idx]));
     _this->vec_index++;
     if(std::get<2>(read_req)==_this->row_latency)_this->vec_index = 0;
     if(!_this->queue.empty()) _this->event.enqueue(std::get<2>(read_req));
