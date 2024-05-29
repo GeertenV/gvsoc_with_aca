@@ -23,8 +23,9 @@ private:
     uint32_t row_latency;
     uint32_t col_latency;
 
-    uint32_t row_count;
-    uint32_t col_count;
+    int rows;
+    int cols;
+    int vlen;
 
     uint8_t row_start;
     uint8_t row_stride;
@@ -33,8 +34,11 @@ private:
     uint8_t col_stride;
     uint8_t col_cycles;
 
-    std::queue<std::tuple<int, int, int>> queue;
-    uint32_t vec_index = 0;
+    int vec_index = 0;
+    int row_cycle_count = 0;
+    int col_cycle_count = 0;
+    int row_shift_reg = 0;
+    int col_shift_reg = 0;
 
     float** array_data;
 };
@@ -47,8 +51,9 @@ AcaModule::AcaModule(vp::ComponentConf &config)
 
     this->row_latency = this->get_js_config()->get_child_int("row_latency");
     this->col_latency = this->get_js_config()->get_child_int("col_latency");
-    this->row_count = this->get_js_config()->get_child_int("row_count");
-    this->col_count = this->get_js_config()->get_child_int("col_count");
+    this->rows = this->get_js_config()->get_child_int("rows");
+    this->cols = this->get_js_config()->get_child_int("cols");
+    this->vlen = this->get_js_config()->get_child_int("vlen");
 
     this->traces.new_trace("trace", &this->trace);
 
@@ -58,11 +63,11 @@ AcaModule::AcaModule(vp::ComponentConf &config)
 }
 
 void AcaModule::initialize_array_data(){
-    this->array_data = new float* [this->row_count];
-    for (int i = 0; i < this->row_count; i++) {
-        this->array_data[i] = new float[this->col_count];
-        for (int j = 0; j < this->col_count; j++) {
-            array_data[i][j] = (float)(i*this->col_count + j);
+    this->array_data = new float* [this->rows];
+    for (int i = 0; i < this->rows; i++) {
+        this->array_data[i] = new float[this->cols];
+        for (int j = 0; j < this->cols; j++) {
+            array_data[i][j] = (float)(i*this->cols + j);
         }
     }
 }
@@ -142,31 +147,41 @@ vp::IoReqStatus AcaModule::handle_req(vp::Block *__this, vp::IoReq *req)
 void AcaModule::handle_event(vp::Block *__this, vp::ClockEvent *event)
 {
     AcaModule *_this = (AcaModule *)__this;
-    std::tuple<int, int, int> read_req;
-    read_req = _this->queue.front();
-    _this->queue.pop();
-    int row_idx = std::get<0>(read_req);
-    int col_idx = std::get<1>(read_req);
+
+    int row_idx = _this->row_shift_reg;
+    int col_idx = _this->col_shift_reg;
     _this->trace.msg(vp::TraceLevel::DEBUG, "reading a value from scratchpad: row_idx = %d, col_idx = %d\n",row_idx, col_idx);
+
     _this->set_itf.sync(std::make_tuple(_this->vec_index,_this->array_data[row_idx][col_idx]));
+
     _this->vec_index++;
-    if(std::get<2>(read_req)==_this->row_latency)_this->vec_index = 0;
-    if(!_this->queue.empty()) _this->event.enqueue(std::get<2>(read_req));
+    if(_this->vec_index==_this->vlen)_this->vec_index = 0;
+
+    _this->col_cycle_count++;
+    if(_this->col_cycle_count<_this->col_cycles){
+        //not at last column
+        _this->col_shift_reg += _this->col_stride;
+        _this->event.enqueue(_this->col_latency);
+    } else {
+        //at last column
+        _this->row_cycle_count++;
+        _this->col_cycle_count = 0;
+        _this->col_shift_reg = _this->col_start;
+        if(_this->row_cycle_count<_this->row_cycles) {
+            //not at last row
+            _this->row_shift_reg += _this->row_stride;
+            _this->event.enqueue(_this->row_latency);
+        } else {
+            //at last row and done
+            _this->row_cycle_count = 0;
+            _this->row_shift_reg = _this->col_start;
+        }
+    }
 }
 
 void AcaModule::read_scratchpad(){
-    std::tuple<int, int, int> read_req;
-    for(int i = 0; i < this->row_cycles; i++){
-        int row_idx = this->row_start + this->row_stride*i;
-        for(int j = 0; j < this->col_cycles-1; j++){
-            int col_idx = this->col_start + this->col_stride*j;
-            read_req = std::make_tuple(row_idx, col_idx,col_latency);
-            this->queue.push(read_req);
-        }
-        int col_idx = this->col_start + this->col_stride*(this->col_cycles-1);
-        read_req = std::make_tuple(row_idx, col_idx,row_latency);
-        this->queue.push(read_req);
-    }
+    this->row_shift_reg = this->row_start;
+    this->col_shift_reg = this->col_start;
     this->event.enqueue(this->row_latency);
 }
 

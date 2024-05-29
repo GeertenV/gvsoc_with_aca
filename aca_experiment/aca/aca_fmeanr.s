@@ -46,7 +46,7 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 	sw 				a3,16(a4)				# set Col Stride
 	li 				a3,DIAMETER				# Col Cycles = DIAMETER
 	sw 				a3,20(a4)				# set Col Cycles
-	sw 				a3,24(a4)				# set Col Cycles
+	sw 				a3,24(a4)				# go ACA
 
 	li				a3,1					# iterator for window
 	li				a6,DIAMETER				# number of rows in the window

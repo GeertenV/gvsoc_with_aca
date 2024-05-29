@@ -29,7 +29,7 @@ class Soc(gvsoc.systree.Component):
         # Main interconnect
         ico = interco.router.Router(self, 'ico')
 
-        aca = aca_module.AcaModule(self, 'aca_module', row_latency=16, col_latency=1, row_count=22, col_count=22)
+        aca = aca_module.AcaModule(self, 'aca_module', row_latency=16, col_latency=1, rows=22, cols=22, vlen=7)
         ico.add_mapping('aca_module', base=0x2000000, remove_offset=0x2000000, size=0x00001000)
         self.bind(ico, 'aca_module', aca, 'input')
 

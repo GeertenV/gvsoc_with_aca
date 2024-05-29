@@ -2,7 +2,7 @@ import gvsoc.systree
 
 class AcaModule(gvsoc.systree.Component):
 
-    def __init__(self, parent: gvsoc.systree.Component, name: str, row_latency: int, col_latency: int, row_count: int, col_count: int):
+    def __init__(self, parent: gvsoc.systree.Component, name: str, row_latency: int, col_latency: int, rows: int, cols: int, vlen: int):
         super().__init__(parent, name)
 
         self.add_sources(['aca_module.cpp'])
@@ -10,8 +10,9 @@ class AcaModule(gvsoc.systree.Component):
         self.add_properties({
             "row_latency": row_latency,
             "col_latency": col_latency,
-            "row_count": row_count,
-            "col_count": col_count
+            "rows": rows,
+            "cols": cols,
+            "vlen": vlen
         })
 
     def i_INPUT(self) -> gvsoc.systree.SlaveItf:
