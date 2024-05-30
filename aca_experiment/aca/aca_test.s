@@ -12,10 +12,24 @@ main:
 	sw	s0,12(sp)
 	addi	s0,sp,16
 
+	li 				a1,123
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
+	sw 				a1,0(a1)
 
 MOD_ADDRESS		= 33554432
+REG_ADDRESS		= 50331648
 
 	li  			a4,MOD_ADDRESS
+	li  			a5,REG_ADDRESS
 
 # Row start
 	li 				a3,1
@@ -67,7 +81,20 @@ MOD_ADDRESS		= 33554432
 	NOP
 	NOP
 	NOP
+
+	NOP
+	NOP
+	NOP
 	
+	li 				a3,12
+	lw				a3,0(a5)
+	lw				a3,4(a5)
+	lw				a3,8(a5)
+	lw				a3,12(a5)
+	lw				a3,16(a5)
+	lw				a3,20(a5)	
+	li 				a3,12
+
 	NOP
 	NOP
 	NOP
