@@ -1,11 +1,11 @@
 import gvsoc.systree
 
-class AcaRegister(gvsoc.systree.Component):
+class OutputRegister(gvsoc.systree.Component):
 
     def __init__(self, parent: gvsoc.systree.Component, name: str, latency: int, vlen: int):
         super().__init__(parent, name)
 
-        self.add_sources(['aca_register.cpp'])
+        self.add_sources(['output_register.cpp'])
 
         self.add_properties({
             "latency": latency,

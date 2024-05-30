@@ -9,7 +9,7 @@ clean:
 all:
 	mkdir -p $(BUILDDIR)
 	#riscv64-unknown-elf-gcc -g -o $(BUILDDIR)/test main.c $(RT_SRCS) $(RT_FLAGS)
-	riscv32-unknown-elf-gcc -g -o $(BUILDDIR)/test aca_test.s $(RT_SRCS) $(RT_FLAGS)
+	riscv32-unknown-elf-gcc -g -o $(BUILDDIR)/test aca_fmeanr.s $(RT_SRCS) $(RT_FLAGS)
 
 gvsoc:
 	make -C ../.. TARGETS=aca_system MODULES=$(CURDIR) build

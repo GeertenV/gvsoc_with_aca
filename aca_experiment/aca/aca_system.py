@@ -9,7 +9,7 @@ import utils.loader.loader
 import gvsoc.systree
 import gvsoc.runner
 import aca_module
-import aca_register
+import output_register
 from interco.bus_watchpoint import Bus_watchpoint
 from elftools.elf.elffile import *
 
@@ -33,11 +33,11 @@ class Soc(gvsoc.systree.Component):
         ico.add_mapping('aca_module', base=0x2000000, remove_offset=0x2000000, size=0x00001000)
         self.bind(ico, 'aca_module', aca, 'input')
 
-        aca_reg = aca_register.AcaRegister(self, 'aca_register', latency=1, vlen=7)
-        ico.add_mapping('aca_reg', base=0x3000000, remove_offset=0x3000000, size=0x00001000)
-        self.bind(ico, 'aca_reg', aca_reg, 'input')
+        output_reg = output_register.OutputRegister(self, 'output_register', latency=1, vlen=7)
+        ico.add_mapping('output_reg', base=0x3000000, remove_offset=0x3000000, size=0x00001000)
+        self.bind(ico, 'output_reg', output_reg, 'input')
 
-        self.bind(aca, 'set', aca_reg, 'set')
+        self.bind(aca, 'set', output_reg, 'set')
 
         # Main memory
         mem = memory.memory.Memory(self, 'mem', size=0x1000000)
