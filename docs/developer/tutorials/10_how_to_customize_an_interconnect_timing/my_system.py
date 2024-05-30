@@ -34,7 +34,10 @@ class Soc(gvsoc.systree.Component):
         mem = memory.memory.Memory(self, 'mem', size=0x00100000)
         # The memory needs to be connected with a mpping. The rm_base is used to substract
         # the global address to the requests address so that the memory only gets a local offset.
-        ico.o_MAP(mem.i_INPUT(), 'mem', base=0x00000000, size=0x00100000, rm_base=True, latency=100)
+        #ico.o_MAP(mem.i_INPUT(), 'mem', base=0x00000000, size=0x00100000, rm_base=True, latency=100)
+        ico.add_mapping('mem', base=0x00000000, remove_offset=0x00000000, size=0x00100000, latency=123)
+        self.bind(ico, 'mem', mem, 'input')
+
 
         # Instantiates the main core and connect fetch and data to the interconnect
         host = cpu.iss.riscv.Riscv(self, 'host', isa='rv64imafdc')
