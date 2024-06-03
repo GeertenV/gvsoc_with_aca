@@ -3,30 +3,35 @@ exp 1:
     img_size: 22 x 22
     window_size: 7 x 7
     aca:
-        start of aca-command:   cycle 3463
-        writing of last result: cycle 22936
-        diff:                         19473
+        start of aca-command:   cycle   3463
+        writing of last result: cycle   22936
+        diff:                           19473
     norm:
-        start of first vle32:   cycle 7822
-        writing of last result: cycle 37824
-        diff:                         30002
-    ratio: 1.54
+        start of first vle32:   cycle   7822
+        writing of last result: cycle   37824
+        diff:                           30002
+        ratio:                          1.54
+    norm + double vector load:
+        start of first vle32:   cycle   7961
+        writing of last result: cycle   33866
+        diff:                           25905
+        ratio:                          1.33
 
 exp 2:
     date: 03-06-2024
     img_size: 256 x 256
     windows_size: 15 x 15
     aca:
-        start of aca-command:   cycle 3479
-        writing of last result: cycle 15230362
-        diff:                         15226883
+        start of aca-command:   cycle   3479
+        writing of last result: cycle   15230362
+        diff:                           15226883
     norm:
-        start of first vle32:   cycle 593290
-        writing of last result: cycle 21970104
-        diff:                         21376814
-    ratio: 1.40
+        start of first vle32:   cycle   593290
+        writing of last result: cycle   21970104
+        diff:                           21376814
+        ratio:                          1.40
     norm + double vector load:
-        start of first vle32:   cycle 593429
-        writing of last result: cycle 19627682
-        diff:                         19034253
-    ratio: 1.25
+        start of first vle32:   cycle   593429
+        writing of last result: cycle   19627682
+        diff:                           19034253
+        ratio:                          1.25
