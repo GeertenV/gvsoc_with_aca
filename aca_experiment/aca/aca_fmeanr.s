@@ -12,8 +12,8 @@ main:
 	sw	s0,12(sp)
 	addi	s0,sp,16
 
-IMGWIDTH  	= 22
-RADIUS 		= 3
+IMGWIDTH  	= 256
+RADIUS 		= 7
 MOD_ADDRESS		= 33554432
 REG_ADDRESS		= 50331648
 
@@ -61,6 +61,16 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 	NOP
 	NOP
 	NOP
+
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+
+	NOP
+	NOP
+	NOP
 	NOP
 	NOP
 
@@ -71,11 +81,22 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 	NOP
 	NOP
 	NOP
+
 	NOP
 	NOP
 
 # window loop #
 .L3:
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+
+	NOP
+	NOP
+	NOP
+
 	vle32.v 		v2,(a5)					# load next vector
 	vfadd.vv		v1,v2,v1				# add vectors
 	addi			a3,a3,1					# increment window iterator

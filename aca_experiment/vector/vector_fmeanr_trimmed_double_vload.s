@@ -60,8 +60,11 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 .L4:
 	add				a6,a6,a7				# calculate next vector address
 	vle32.v 		v2,(a6)					# load next vector
+	add				a6,a6,a7				# calculate next vector address
+	vle32.v 		v3,(a6)					# load next vector
 	vfadd.vv		v1,v2,v1				# add vectors
-	addi			a3,a3,1					# increment iterator
+	vfadd.vv		v1,v3,v1				# add vectors
+	addi			a3,a3,2					# increment iterator
 	bne				a5,a3,.L4				# loop or exit
 
 # calculate average #
