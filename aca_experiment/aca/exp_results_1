@@ -1,0 +1,13 @@
+exp 1:
+    date: 03-06-2024
+    img_size: 22 x 22
+    window_size: 7 x 7
+    aca:
+        start of aca-command:   cycle 3463
+        writing of last result: cycle 22936
+        diff:                         19473
+    norm:
+        start of first vle32:   cycle 7822
+        writing of last result: cycle 37824
+        diff:                         30002
+

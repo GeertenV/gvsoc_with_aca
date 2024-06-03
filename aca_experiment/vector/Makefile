@@ -9,7 +9,7 @@ clean:
 all:
 	mkdir -p $(BUILDDIR)
 	#riscv32-unknown-elf-gcc -g -o $(BUILDDIR)/test vector_klad.s $(RT_SRCS) $(RT_FLAGS)
-	riscv32-unknown-elf-gcc -g -o $(BUILDDIR)/test vector_fmeanr.s $(RT_SRCS) $(RT_FLAGS)
+	riscv32-unknown-elf-gcc -g -o $(BUILDDIR)/test vector_fmeanr_trimmed.s $(RT_SRCS) $(RT_FLAGS)
 	#riscv32-unknown-elf-gcc -S $(BUILDDIR)/test fill_mem.c $(RT_SRCS) $(RT_FLAGS)
 
 gvsoc:

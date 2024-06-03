@@ -149,6 +149,13 @@ vp::IoReqStatus AcaModule::handle_req(vp::Block *__this, vp::IoReq *req)
     return vp::IO_REQ_OK;
 }
 
+
+void AcaModule::read_scratchpad(){
+    this->row_shift_reg = this->row_start;
+    this->col_shift_reg = this->col_start;
+    this->event.enqueue(this->row_latency);
+}
+
 void AcaModule::handle_event(vp::Block *__this, vp::ClockEvent *event)
 {
     AcaModule *_this = (AcaModule *)__this;
@@ -182,12 +189,6 @@ void AcaModule::handle_event(vp::Block *__this, vp::ClockEvent *event)
             _this->row_shift_reg = _this->col_start;
         }
     }
-}
-
-void AcaModule::read_scratchpad(){
-    this->row_shift_reg = this->row_start;
-    this->col_shift_reg = this->col_start;
-    this->event.enqueue(this->row_latency);
 }
 
 extern "C" vp::Component *gv_new(vp::ComponentConf &config)
