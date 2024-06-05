@@ -58,7 +58,7 @@ WINDOWSIZE	= DIAMETER*DIAMETER
 
 # window loop #
 .L4:
-	add				a6,a6,a7				# calculate next vector address
+	add				a6,a6,a7				# calculate next vector address, a7 holds 4*IMGWIDTH
 	vle32.v 		v2,(a6)					# load next vector
 	vfadd.vv		v1,v2,v1				# add vectors
 	addi			a3,a3,1					# increment iterator
